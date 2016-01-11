@@ -14,12 +14,12 @@ public class installerService  {
 
     public void installApk(String filename) {
         Log.i("Action Log - DM - ", "installer service - installApk - url -");
-           String path = "/sdcard/Download/"+filename;
+           String path = "/sdcard/download/"+filename;
             try {
-                final String command = "cp -r " + path +" "+"/data/app/" ;
-//                final String command = "pm install -r " + filename;
+//                final String command = "cp -r " + path +" "+"/data/app/" ;
+                final String command = "pm install -r " + path;
 
-                Process proc = Runtime.getRuntime().exec(new String[] { "su", "-c", command });
+                Process proc = Runtime.getRuntime().exec(command);
                 proc.waitFor();
             } catch (Exception e) {
                 e.printStackTrace();

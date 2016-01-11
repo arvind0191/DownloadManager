@@ -97,7 +97,7 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
     protected void onPostExecute(String s) {
         Log.i("Response get in postexecute is - ", "" + s);
         installerService service = new installerService();
-        service.installApk("com.android.gesture.builder");
+        service.installApk("stericson.busybox-38-www.APK4Fun.com.apk");
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/Download/GestureBuilder.apk")), "application/vnd.android.package-archive");
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
