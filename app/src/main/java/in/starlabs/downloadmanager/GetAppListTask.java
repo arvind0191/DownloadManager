@@ -13,7 +13,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -127,10 +129,28 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String appList) {
+        List<String> DownloadedList = getDownloadedAppList();
         for (String getFile: appList.split("&")){
-            Log.d("abc","filename  is: Utils.ServerURL+getFile" + getFile);
-            new DownloaderTask(context).execute(Utils.DownloadUrl+getFile);
+            if(!DownloadedList.contains(getFile)) {
+                Log.d("abc", "filename  is: Utils.ServerURL+getFile" + getFile);
+                new DownloaderTask(context).execute(Utils.DownloadUrl + getFile);
+            }
         }
         super.onPostExecute(appList);
+    }
+
+    private List<String> getDownloadedAppList() {
+        List<String> list = new ArrayList<>();
+
+        final String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File[] files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+            for (File each: files) {
+                list.add(each.toString());
+            }
+        } else {
+
+        }
+        return list;
     }
 }

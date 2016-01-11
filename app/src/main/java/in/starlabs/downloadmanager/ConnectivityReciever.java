@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -28,6 +30,12 @@ public class ConnectivityReciever extends BroadcastReceiver {
         if (isConnected) {
             new GetAppListTask(context).execute(Utils.ServerURL);
             Fabric.with(context, new Crashlytics());
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName("Tweet")
+                    .putContentType("Video")
+                    .putContentId("1234")
+                    .putCustomAttribute("Favorites Count", 20)
+                    .putCustomAttribute("Screen Orientation", "Landscape"));
             Log.i("Action Log - ConnectivityReciever -", "Connectivity changed - " + isConnected);
         } else {
             Log.i("Action Log - ConnectivityReciever -", "Connectivity changed - " + isConnected);

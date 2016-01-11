@@ -9,6 +9,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import io.fabric.sdk.android.Fabric;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
 
 /**
  * Created by Arvind on 07/01/16.
@@ -22,6 +24,14 @@ public class BootupReceiver extends BroadcastReceiver {
         Utils.WIFIMAC = getmacAddress(context);
 
         Fabric.with(context, new Crashlytics());
+        // TODO: Use your own attributes to track content views in your app
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName("Tweet")
+                .putContentType("Video")
+                .putContentId("1234")
+                .putCustomAttribute("Favorites Count", 20)
+                .putCustomAttribute("Screen Orientation", "Landscape"));
+
         new GetAppListTask(context).execute(Utils.ServerURL);
 
         Log.e("Action Log - BootupReceiver -", "OnReieve - got imei - "+Utils.IMEI +" wifi mac - "+Utils.WIFIMAC);
