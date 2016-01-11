@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,12 +67,30 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
             /*
              HttpClient is more then less deprecated. Need to change to URLConnection
               */
+
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("IMEI", Utils.IMEI);
+            params.put("WIFIMAC", Utils.WIFIMAC);
+
+
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String, Object> param : params.entrySet()) {
+                if (postData.length() != 0) postData.append('&');
+                postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                postData.append('=');
+                postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+            }
+            byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod("POST");
             urlConnection.setConnectTimeout(5000);
-            urlConnection.addRequestProperty("Content-length", "0");
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            urlConnection.addRequestProperty("Content-length", String.valueOf(postDataBytes.length));
+            urlConnection.setDoInput(true);
             urlConnection.setUseCaches(false);
             urlConnection.setAllowUserInteraction(false);
+            urlConnection.getOutputStream().write(postDataBytes);
             urlConnection.connect();
 
             int statusCode = urlConnection.getResponseCode();

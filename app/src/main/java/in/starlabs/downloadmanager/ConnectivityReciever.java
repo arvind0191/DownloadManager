@@ -18,6 +18,7 @@ public class ConnectivityReciever extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
