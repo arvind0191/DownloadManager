@@ -18,23 +18,20 @@ import com.crashlytics.android.answers.ContentViewEvent;
 public class BootupReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.e("Action Log - BootupReceiver -", "OnReieve");
+        Log.i("Action Log - DownloadManager - BootupReceiver -", "OnReieve");
 
-       Utils.IMEI = getIMEI(context);
+        Utils.IMEI = getIMEI(context);
         Utils.WIFIMAC = getmacAddress(context);
 
         Fabric.with(context, new Crashlytics());
         // TODO: Use your own attributes to track content views in your app
         Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Tweet")
-                .putContentType("Video")
-                .putContentId("1234")
-                .putCustomAttribute("Favorites Count", 20)
-                .putCustomAttribute("Screen Orientation", "Landscape"));
+                .putContentName("BootupReciver")
+                .putContentType("Reciever"));
 
         new GetAppListTask(context).execute(Utils.ServerURL);
 
-        Log.e("Action Log - BootupReceiver -", "OnReieve - got imei - "+Utils.IMEI +" wifi mac - "+Utils.WIFIMAC);
+        Log.i("Action Log - DownloadManager - BootupReceiver -", "OnReieve - got imei - " + Utils.IMEI + " wifi mac - " + Utils.WIFIMAC);
 
     }
 

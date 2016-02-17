@@ -31,14 +31,11 @@ public class ConnectivityReciever extends BroadcastReceiver {
             new GetAppListTask(context).execute(Utils.ServerURL);
             Fabric.with(context, new Crashlytics());
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName("Tweet")
-                    .putContentType("Video")
-                    .putContentId("1234")
-                    .putCustomAttribute("Favorites Count", 20)
-                    .putCustomAttribute("Screen Orientation", "Landscape"));
-            Log.i("Action Log - ConnectivityReciever -", "Connectivity changed - " + isConnected);
+                    .putContentName("Connnectiontypechange")
+                    .putContentType("Reciever"));
+            Log.i("Action Log - DownloadManager - ConnectivityReciever -", "Connectivity changed - " + isConnected);
         } else {
-            Log.i("Action Log - ConnectivityReciever -", "Connectivity changed - " + isConnected);
+            Log.i("Action Log - DownloadManager - ConnectivityReciever -", "Connectivity changed - " + isConnected);
         }
 
     }

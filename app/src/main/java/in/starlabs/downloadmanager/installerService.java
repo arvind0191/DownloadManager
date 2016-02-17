@@ -13,7 +13,7 @@ import java.io.File;
 public class installerService  {
 
     public void installApk(String filename) {
-        Log.i("Action Log - DM - ", "installer service - installApk - url -");
+        Log.i("Action Log - DownloadManager - ", "installer service - installApk - url -");
            String path = "/sdcard/download/"+filename;
             try {
 //                final String command = "cp -r " + path +" "+"/data/app/" ;

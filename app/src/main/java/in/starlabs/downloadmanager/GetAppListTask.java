@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -56,7 +57,7 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
                 e.printStackTrace();
             }
         }
-        Log.i("Action Log - DM - ", "GetAppListTask - DoinBackground - url -"+tesURL);
+        Log.i("Action Log - DownloadManager - ", "GetAppListTask - DoinBackground - url -"+tesURL);
         return getList(tesURL);
     }
 
@@ -129,11 +130,12 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String appList) {
+        Log.i("Action Log - DownloadManager - ", "GetAppListTask - onPostExecute - applist"+appList);
         List<String> DownloadedList = getDownloadedAppList();
         for (String getFile: appList.split("&")){
             if(!DownloadedList.contains(getFile)) {
-                Log.d("abc", "filename  is: Utils.ServerURL+getFile" + getFile);
-                new DownloaderTask(context).execute(Utils.DownloadUrl + getFile);
+                Log.i("Action Log - DownloadManager -", "filename  is: Utils.ServerURL+getFile" + getFile);
+                new DownloaderTask(context).execute(Utils.DownloadUrl + getFile,getFile);
             }
         }
         super.onPostExecute(appList);
@@ -144,10 +146,16 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
 
         final String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File[] files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles();
+            File[] files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String filename) {
+                    return filename.endsWith(".mp3");
+                }
+            });
             for (File each: files) {
                 list.add(each.toString());
             }
+            Log.i("Action Log - DownloadManager - "," file list - "+list.toString());
         } else {
 
         }

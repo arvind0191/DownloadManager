@@ -38,10 +38,10 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
         HttpURLConnection connection = null;
         File path =  new File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                + "/Filename.xml");
+                + "/"+sUrl[1]);
         try {
-            URL url = new URL("http://ecx.images-amazon.com/images/I/71asuDsIeJL._SL1500_.jpg");
-            Log.i("Action Log - DM - ", "GetAppListTask - DoinBackground - url -" +url );
+            URL url = new URL(sUrl[0]);
+            Log.i("Action Log - DownloadManager - ", "GetAppListTask - DoinBackground - url -" +url );
 
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
@@ -95,14 +95,14 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        Log.i("Response get in postexecute is - ", "" + s);
+        Log.i("Action Log - DownloadManager - Response get in postexecute is - ", "" + s);
         installerService service = new installerService();
         service.installApk("stericson.busybox-38-www.APK4Fun.com.apk");
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/Download/GestureBuilder.apk")), "application/vnd.android.package-archive");
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
 //        context.startActivity(intent);
-        Log.i("Response get in postexecute is - done", "");
+        Log.i("Action Log - DownloadManager - Response get in postexecute is - done", "");
         super.onPostExecute(s);
     }
 }
