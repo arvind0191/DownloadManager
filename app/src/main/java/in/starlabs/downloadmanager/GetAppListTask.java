@@ -1,9 +1,13 @@
 package in.starlabs.downloadmanager;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.provider.SyncStateContract;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -12,6 +16,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -25,6 +31,10 @@ import java.util.logging.Logger;
  * Created by Arvind on 07/01/16.
  */
 public class GetAppListTask extends AsyncTask<String, String, String> {
+    DownloadManager downloadManager;
+    private long myDownloadReference;
+    private BroadcastReceiver receiverDownloadComplete;
+    private BroadcastReceiver receiver;
     Context context; // give the context to the task by calling with constructor
    public GetAppListTask(Context context){
        this.context = context;
@@ -123,8 +133,22 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
         List<String> DownloadedList = getDownloadedAppList();
         for (String getFile: appList.split("&")){
             if(!DownloadedList.contains(getFile)) {
-                Log.i("Action Log - DownloadManager -", "filename  is: Utils.ServerURL+getFile" + getFile);
-                new DownloaderTask(context).execute(Utils.DownloadUrl + getFile,getFile);
+
+//                new DownloaderTask(context).execute(Utils.DownloadUrl + getFile,getFile);
+            downloadManager = ( DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
+                try {
+                    Uri uri = Uri.parse(Utils.DownloadUrl + "/" + getFile);
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setVisibleInDownloadsUi(true);
+                    Log.i("Action Log - DownloadManager -", "filename  is: Utils.ServerURL+getFile" + getFile);
+                    myDownloadReference = downloadManager.enqueue(request);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
+
             }
         }
         super.onPostExecute(appList);
