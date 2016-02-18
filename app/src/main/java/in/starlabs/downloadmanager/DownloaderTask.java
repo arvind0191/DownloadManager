@@ -22,7 +22,7 @@ import java.net.URL;
 public class DownloaderTask extends AsyncTask <String, Integer, String> {
 
     private Context context;
-    String filename = "file.jpg";
+
     private PowerManager.WakeLock mWakeLock;
 
     public DownloaderTask(Context context) {
@@ -33,12 +33,23 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
 
     @Override
     protected String doInBackground(String... sUrl) {
+        String filename = "";
+        filename = sUrl[1];
         InputStream input = null;
         OutputStream output = null;
         HttpURLConnection connection = null;
-        File path =  new File(Environment
+        java.io.File file = new java.io.File(Environment
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                + "/"+sUrl[1]);
+                + "/"+filename);
+
+        //create the file
+        if(!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try {
             URL url = new URL(sUrl[0]);
             Log.i("Action Log - DownloadManager - ", "GetAppListTask - DoinBackground - url -" +url );
@@ -59,7 +70,7 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
 
             // download the file
             input = connection.getInputStream();
-            output = new FileOutputStream(path);
+            output = new FileOutputStream(file);
 
             byte data[] = new byte[4096];
             long total = 0;
@@ -76,6 +87,7 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
                     publishProgress((int) (total * 100 / fileLength));
                 output.write(data, 0, count);
             }
+            return filename;
         } catch (Exception e) {
             return e.toString();
         } finally {
@@ -90,19 +102,18 @@ public class DownloaderTask extends AsyncTask <String, Integer, String> {
             if (connection != null)
                 connection.disconnect();
         }
-        return null;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        Log.i("Action Log - DownloadManager - Response get in postexecute is - ", "" + s);
+    protected void onPostExecute(String apkName) {
+        Log.i("Action Log - DownloadManager - Response get in postexecute is - ", "" + apkName);
         installerService service = new installerService();
-        service.installApk("stericson.busybox-38-www.APK4Fun.com.apk");
+        service.installApk(apkName);
 //        Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setDataAndType(Uri.fromFile(new File("/mnt/sdcard/Download/GestureBuilder.apk")), "application/vnd.android.package-archive");
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // without this flag android returned a intent error!
 //        context.startActivity(intent);
         Log.i("Action Log - DownloadManager - Response get in postexecute is - done", "");
-        super.onPostExecute(s);
+        super.onPostExecute(apkName);
     }
 }

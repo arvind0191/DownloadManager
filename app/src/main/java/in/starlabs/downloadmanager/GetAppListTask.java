@@ -45,18 +45,7 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
 
         String tesURL = params[0];
-        java.io.File file = new java.io.File(Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                + "/Filename.xml");
 
-        //create the file
-        if(!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         Log.i("Action Log - DownloadManager - ", "GetAppListTask - DoinBackground - url -"+tesURL);
         return getList(tesURL);
     }
@@ -149,7 +138,7 @@ public class GetAppListTask extends AsyncTask<String, String, String> {
             File[] files = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String filename) {
-                    return filename.endsWith(".mp3");
+                    return filename.endsWith(".apk");
                 }
             });
             for (File each: files) {
